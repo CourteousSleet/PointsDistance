@@ -24,7 +24,7 @@ int main() {
 
   pair<pair<double, double>, pair<double, double> > closest_points = ClosestPair(Px, Py);
 
-  os << closest_points.first.first << ' ' << closest_points.first.second << "---" << closest_points.second.first << ' ' << closest_points.second.second;
+  os << closest_points.first.first << ' ' << closest_points.first.second << " --- " << closest_points.second.first << ' ' << closest_points.second.second;
 
   is.close();
   os.close();

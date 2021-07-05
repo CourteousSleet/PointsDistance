@@ -24,7 +24,8 @@ void SelectPointsWithDelta(std::vector<std::pair<double, double> > &Sy,
   auto negative_segment = median - delta;
 
   for (auto &pair_points : Py) {
-    if (pair_points.first <= positive_segment && pair_points.second >= negative_segment) Sy.emplace_back(pair_points);
+    if (pair_points.first <= positive_segment && pair_points.second >= negative_segment)
+      Sy.emplace_back(pair_points);
   }
 }
 
@@ -90,23 +91,52 @@ std::pair<std::pair<double, double>, std::pair<double, double> > ClosestPair(con
                                                                                                          double> > &Px,
                                                                              const std::vector<std::pair<double,
                                                                                                          double >> &Py) {
-  std::vector<std::pair<double, double> > Lx;
-  std::vector<std::pair<double, double> > Ly;
-  std::vector<std::pair<double, double> > Rx;
-  std::vector<std::pair<double, double> > Ry;
+  if (Px.size() <= 3 || Py.size() <= 3) {
+    if (Px.size() == 3 || Py.size() == 3) {
+      std::pair<std::pair<double, double>, std::pair<double, double> > x_f_s = std::make_pair(Px.at(0), Px.at(1));
+      std::pair<std::pair<double, double>, std::pair<double, double> > x_f_t = std::make_pair(Px.at(0), Px.at(2));
+      std::pair<std::pair<double, double>, std::pair<double, double> > x_s_t = std::make_pair(Px.at(1), Px.at(2));
 
-  PushFirstHalf(Lx, Px);
-  PushFirstHalf(Ly, Py);
+      std::pair<std::pair<double, double>, std::pair<double, double> > y_f_s = std::make_pair(Py.at(0), Py.at(1));
+      std::pair<std::pair<double, double>, std::pair<double, double> > y_f_t = std::make_pair(Py.at(0), Py.at(2));
+      std::pair<std::pair<double, double>, std::pair<double, double> > y_s_t = std::make_pair(Py.at(1), Py.at(2));
 
-  PushSecondHalf(Rx, Px);
-  PushSecondHalf(Ry, Py);
+      std::pair<std::pair<double, double>, std::pair<double, double> > best_x = ChooseBestOfThree(x_f_s, x_f_t, x_s_t);
+      std::pair<std::pair<double, double>, std::pair<double, double> > best_y = ChooseBestOfThree(y_f_s, y_f_t, y_s_t);
 
-  std::pair<std::pair<double, double>, std::pair<double, double> > best_left_pair = ClosestPair(Lx, Ly);
-  std::pair<std::pair<double, double>, std::pair<double, double> > best_right_pair = ClosestPair(Rx, Ry);
+      if (CountFlatDistance(best_x) < CountFlatDistance(best_y))
+        return best_x;
+      else
+        return best_y;
+    } else if (Px.size() <= 2 || Py.size() <= 2) {
+      std::pair<std::pair<double, double>, std::pair<double, double> > x_f_s = std::make_pair(Px.at(0), Px.at(1));
 
-  double delta = std::min(CountFlatDistance(best_left_pair), CountFlatDistance(best_right_pair));
+      std::pair<std::pair<double, double>, std::pair<double, double> > y_f_s = std::make_pair(Py.at(0), Py.at(1));
 
-  std::pair<std::pair<double, double>, std::pair<double, double> > best_split_pair = ClosestSplitPair(Px, Py, delta);
+      if (CountFlatDistance(x_f_s) < CountFlatDistance(y_f_s))
+        return x_f_s;
+      else
+        return y_f_s;
+    }
+  } else {
+    std::vector<std::pair<double, double> > Lx;
+    std::vector<std::pair<double, double> > Ly;
+    std::vector<std::pair<double, double> > Rx;
+    std::vector<std::pair<double, double> > Ry;
 
-  return ChooseBestOfThree(best_left_pair, best_split_pair, best_right_pair);
+    PushFirstHalf(Lx, Px);
+    PushFirstHalf(Ly, Py);
+
+    PushSecondHalf(Rx, Px);
+    PushSecondHalf(Ry, Py);
+
+    std::pair<std::pair<double, double>, std::pair<double, double> > best_left_pair = ClosestPair(Lx, Ly);
+    std::pair<std::pair<double, double>, std::pair<double, double> > best_right_pair = ClosestPair(Rx, Ry);
+
+    double delta = std::min(CountFlatDistance(best_left_pair), CountFlatDistance(best_right_pair));
+
+    std::pair<std::pair<double, double>, std::pair<double, double> > best_split_pair = ClosestSplitPair(Px, Py, delta);
+
+    return ChooseBestOfThree(best_left_pair, best_split_pair, best_right_pair);
+  }
 }
