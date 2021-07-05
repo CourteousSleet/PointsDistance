@@ -3,4 +3,4 @@ project(PointsDistance)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(PointsDistance main.cpp)
+add_executable(PointsDistance src/main.cc include/DistanceFunctions.hpp src/DistanceFunctions.cc)
