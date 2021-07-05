@@ -14,7 +14,7 @@ inline double CountFlatDistance(const std::pair<std::pair<double, double>, std::
 }
 
 inline double FindMedianForAbscissa(const std::vector<std::pair<double,
-                                                         double> > &Px) {
+                                                                double> > &Px) {
   int bound = Px.size() / 2;
   double sum = 0;
   for (int i = 0; i < bound; ++i) {
@@ -23,7 +23,11 @@ inline double FindMedianForAbscissa(const std::vector<std::pair<double,
   return sum / bound;
 }
 
-std::vector<std::pair<double, double> > SelectPointsWithDelta();
+void SelectPointsWithDelta(std::vector<std::pair<double, double> > &Sy,
+                           const std::vector<std::pair<double,
+                                                       double >> &Py,
+                           const double &median,
+                           const double &delta);
 
 std::pair<std::pair<double, double>, std::pair<double, double> > ChooseBestOfThree(const std::pair<std::pair<double,
                                                                                                              double>,

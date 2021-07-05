@@ -4,3 +4,5 @@ project(PointsDistance)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(PointsDistance src/main.cc include/DistanceFunctions.hpp src/DistanceFunctions.cc)
+
+install(TARGETS PointsDistance DESTINATION ${CMAKE_CURRENT_LIST_DIR}/bin)
