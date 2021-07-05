@@ -14,6 +14,36 @@ bool comparator_y(const std::pair<double, double> &lhs, const std::pair<double, 
   return false;
 }
 
+std::vector<std::pair<double, double> > SelectPointsWithDelta() {
+
+}
+
+std::pair<std::pair<double, double>, std::pair<double, double> > ClosestSplitPair(const std::vector<std::pair<double,
+                                                                                                        double> > &Px,
+                                                                                  const std::vector<std::pair<double,
+                                                                                                        double >> &Py,
+                                                                                  const double &delta) {
+  double median = FindMedianForAbscissa(Px);
+
+  std::vector<std::pair<double, double> > Sy = SelectPointsWithDelta();
+
+  double best = delta;
+
+  std::pair<std::pair<double, double>, std::pair<double, double> > best_pair;
+
+  for (int i = 0; i < Sy.size() - 1; ++i) {
+    unsigned int diff = Sy.size() - i;
+    for (unsigned int j = 0; j < std::min(static_cast<unsigned int>(7), diff); ++j) {
+      if (CountFlatDistance(std::make_pair(Sy.at(i), Sy.at(i + j))) < best) {
+        best = CountFlatDistance(std::make_pair(Sy.at(i), Sy.at(i + j)));
+        best_pair = std::make_pair(Sy.at(i), Sy.at(i + j));
+      }
+    }
+  }
+
+  return best_pair;
+}
+
 std::pair<std::pair<double, double>, std::pair<double, double> > ChooseBestOfThree(const std::pair<std::pair<double,
                                                                                                              double>,
                                                                                                    std::pair<double,
@@ -44,9 +74,9 @@ std::pair<std::pair<double, double>, std::pair<double, double> > ChooseBestOfThr
   return std::pair<std::pair<double, double>, std::pair<double, double>>();
 }
 
-std::pair<std::pair<double, double>, std::pair<double, double> > ClosestPair(std::vector<std::pair<double,
+std::pair<std::pair<double, double>, std::pair<double, double> > ClosestPair(const std::vector<std::pair<double,
                                                                                                    double> > &Px,
-                                                                             std::vector<std::pair<double,
+                                                                             const std::vector<std::pair<double,
                                                                                                    double >> &Py) {
 
   std::vector<std::pair<double, double> > Lx;
@@ -54,17 +84,12 @@ std::pair<std::pair<double, double>, std::pair<double, double> > ClosestPair(std
   std::vector<std::pair<double, double> > Rx;
   std::vector<std::pair<double, double> > Ry;
 
-  std::vector<std::pair<double, double> > Px_copy = Px;
-  std::vector<std::pair<double, double> > Py_copy = Py;
 
-  stable_sort(Px_copy.begin(), Px_copy.end(), comparator_x);
-  stable_sort(Py_copy.begin(), Py_copy.end(), comparator_y);
+  PushFirstHalf(Lx, Px);
+  PushFirstHalf(Ly, Py);
 
-  PushFirstHalf(Lx, Px_copy);
-  PushFirstHalf(Ly, Py_copy);
-
-  PushSecondHalf(Rx, Px_copy);
-  PushSecondHalf(Ry, Py_copy);
+  PushSecondHalf(Rx, Px);
+  PushSecondHalf(Ry, Py);
 
   std::pair<std::pair<double, double>, std::pair<double, double> > best_left_pair = ClosestPair(Lx, Ly);
   std::pair<std::pair<double, double>, std::pair<double, double> > best_right_pair = ClosestPair(Rx, Ry);

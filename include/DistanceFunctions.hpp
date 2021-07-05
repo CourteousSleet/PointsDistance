@@ -13,22 +13,44 @@ inline double CountFlatDistance(const std::pair<std::pair<double, double>, std::
                  + pow(points.first.second - points.second.second, 2), 0.5f);
 }
 
-std::pair<std::pair<double, double>, std::pair<double, double> > ChooseBestOfThree(const std::pair<std::pair<double, double>, std::pair<double, double> > &lhs,
-                                                                                   const std::pair<std::pair<double, double>, std::pair<double, double> > &mhs,
-                                                                                   const std::pair<std::pair<double, double>, std::pair<double, double> > &rhs);
+inline double FindMedianForAbscissa(const std::vector<std::pair<double,
+                                                         double> > &Px) {
+  int bound = Px.size() / 2;
+  double sum = 0;
+  for (int i = 0; i < bound; ++i) {
+    sum += Px.at(i).first;
+  }
+  return sum / bound;
+}
 
-std::pair<std::pair<double, double>, std::pair<double, double> > ClosestPair(std::vector<std::pair<double,
-                                                                                                   double> > &Px,
-                                                                             std::vector<std::pair<double,
-                                                                                                   double >> &Py);
+std::vector<std::pair<double, double> > SelectPointsWithDelta();
 
-std::pair<std::pair<double, double>, std::pair<double, double> > ClosestSplitPair(std::vector<std::pair<double,
-                                                                                                        double> > &Px,
-                                                                                  std::vector<std::pair<double,
-                                                                                                        double >> &Py,
-                                                                                                        const double &delta);
+std::pair<std::pair<double, double>, std::pair<double, double> > ChooseBestOfThree(const std::pair<std::pair<double,
+                                                                                                             double>,
+                                                                                                   std::pair<double,
+                                                                                                             double> > &lhs,
+                                                                                   const std::pair<std::pair<double,
+                                                                                                             double>,
+                                                                                                   std::pair<double,
+                                                                                                             double> > &mhs,
+                                                                                   const std::pair<std::pair<double,
+                                                                                                             double>,
+                                                                                                   std::pair<double,
+                                                                                                             double> > &rhs);
 
-inline void PushFirstHalf(std::vector<std::pair<double, double> > &dest, const std::vector<std::pair<double, double> > &src) {
+std::pair<std::pair<double, double>, std::pair<double, double> > ClosestPair(const std::vector<std::pair<double,
+                                                                                                         double> > &Px,
+                                                                             const std::vector<std::pair<double,
+                                                                                                         double >> &Py);
+
+std::pair<std::pair<double, double>, std::pair<double, double> > ClosestSplitPair(const std::vector<std::pair<double,
+                                                                                                              double> > &Px,
+                                                                                  const std::vector<std::pair<double,
+                                                                                                              double >> &Py,
+                                                                                  const double &delta);
+
+inline void PushFirstHalf(std::vector<std::pair<double, double> > &dest,
+                          const std::vector<std::pair<double, double> > &src) {
   int bound = src.size() / 2;
   int counter = 0;
   while (counter != bound) {
@@ -37,7 +59,8 @@ inline void PushFirstHalf(std::vector<std::pair<double, double> > &dest, const s
   }
 }
 
-inline void PushSecondHalf(std::vector<std::pair<double, double> > &dest, const std::vector<std::pair<double, double> > &src) {
+inline void PushSecondHalf(std::vector<std::pair<double, double> > &dest,
+                           const std::vector<std::pair<double, double> > &src) {
   int bound = src.size();
   int counter = src.size() / 2;
   while (counter != bound) {
